@@ -1,0 +1,12 @@
+REST API - JSON  
+GET /USERS - It will list all users  {return it as json file}
+get/users/ -? html document 
+GET /api/USERS/1 -> get user with id =1  = ? ,obile docs 
+GET /USERS/2 -> get user with id =2 
+// yahan prr id likhkrr krna is not possible so 
+we instead do  GET/api/users/:id 
+: mean dynamic mtlb kuch bhiii hosktii hain value 
+
+POST/ user - > create new user 
+PATCH  / user/1-> edit the user with ID 1 
+delete/user/1 - > delete the user with ID 1  
