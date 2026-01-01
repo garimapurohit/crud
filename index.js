@@ -12,22 +12,39 @@ app.use(express.json());
 
 // middle 
 app.use(express.urlencoded({extended:false})); // koi bhii form data aaya usko body mein dalne mein help kregaa 
+app.use((req, res, next) => {
+fs.appendFile(
+    "log.txt",
+    `${Date.now()}: ${req.method}: ${req.url}\n`,
+    (err) => {
+      if (err) console.log(err);
+      next();
+    }
+  );
+
+});
+
+
+
+// WE CAN MAKE MIDDLWARE USING APP.USE
 app.route("/api/users")
   .get((req, res) => {
+    res.setHeader("x-myName","garima"); // here we make custom  header in the response :) 
+    //while making custom header try to include x as prefix standard way of writing to denote to custom ones 
     // all users bhej deta hai
-const users = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
+const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 
-    return res.json(users);
+    return res.json(allusers); 
   })
   .post((req, res) => {
     // new user create -- abhi pending
     const body = req.body;
     users.push({...body,id : users.length +1});
-    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {z
   if (err) console.log(err);
 });
 
-    // console.log(body); // undefined becoz express dk what kind of data it is and how to handle it 
+// console.log(body); // undefined becoz express dk what kind of data it is and how to handle it 
 
     return res.json({ status: "sucessfully added " });
   });
@@ -104,7 +121,7 @@ app.get('/users', (req, res) => {
   res.send(html);
 });
 
-const PORT = 8000;
+const PORT = 8001;
 
 // start server
 app.listen(PORT, () => {
