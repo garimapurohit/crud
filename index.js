@@ -37,21 +37,19 @@ const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
     return res.json(allusers); 
   })
   .post((req, res) => {
-    // new user create -- abhi pending
-    const body = req.body;
-    users.push({...body,id : users.length +1});
-    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {z
-  if (err) console.log(err);
+  const body = req.body; // <-- Add this line
+  users.push({ ...body, id: users.length + 1 }); // <-- Add new user
+
+  fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ status: "Error writing file" });
+    }
+    return res.status(201).json({ status: "Successfully added", user: body });
+  });
 });
 
-// console.log(body); // undefined becoz express dk what kind of data it is and how to handle it 
-
-    return res.json({ status: "sucessfully added " });
-  });
-
-/* 
-    /api/users/:id ke liye GET, PATCH, DELETE ek sath 
-*/
+  ///api/users/:id ke liye GET, PATCH, DELETE ek sath 
 app.route("/api/users/:id")
   .get((req, res) => {
     // url me jo value hoti h usko params bolte hainn
@@ -59,35 +57,57 @@ app.route("/api/users/:id")
 
     // ek specific user find kar rhe
     const user = users.find((u) => u.id === id);
+    if (!user) {
+        return res.status(404).json({ status: "User not found" });
+    }
 
-    return res.json(user);
+
+    return res.status(200).json(user);
   })
-  .patch((req, res) => {
-    // Edit user -- abhi pending
-     const id = Number(req.params.id);
-  const body = req.body;
+  // .patch((req, res) => {
+//     // Edit user -- abhi pending
+//      const id = Number(req.params.id);
+//   const body = req.body;
 
-  // find user index
+//   // find user index
+//   const index = users.findIndex((u) => u.id === id);
+
+//   if (index === -1) {
+//     return res.status(404).json({ status: "User not found" });
+//   }
+
+//   // update fields
+//   users[index] = { ...users[index], ...body };
+
+//   // save to file
+//   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+//   if (err) {
+//     console.log(err);
+//     return res.status(500).json({ status: "error writing file" });
+//   }
+//   // send response only after file is written
+//   return res.status(200).json({ status: "User updated", user: users[index] });
+// })
+.patch((req, res) => {
+  const id = Number(req.params.id);
+  const body = req.body;
   const index = users.findIndex((u) => u.id === id);
 
   if (index === -1) {
     return res.status(404).json({ status: "User not found" });
   }
 
-  // update fields
   users[index] = { ...users[index], ...body };
 
-  // save to file
   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
     if (err) {
       console.log(err);
       return res.status(500).json({ status: "error writing file" });
     }
+    return res.status(200).json({ status: "User updated", user: users[index] });
   });
-
-  return res.json({ status: "User updated", user: users[index] });
-  })
-  .delete((req, res) => {
+})
+.delete((req, res) => {
     const id = Number(req.params.id);
 
     // read latest users from file
