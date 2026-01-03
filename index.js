@@ -84,7 +84,7 @@ app.route("/api/users/:id")
 //   if (err) {
 //     console.log(err);
 //     return res.status(500).json({ status: "error writing file" });
-//   }
+//   } 
 //   // send response only after file is written
 //   return res.status(200).json({ status: "User updated", user: users[index] });
 // })
@@ -102,7 +102,9 @@ app.route("/api/users/:id")
   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
     if (err) {
       console.log(err);
+      // added the status code 
       return res.status(500).json({ status: "error writing file" });
+    
     }
     return res.status(200).json({ status: "User updated", user: users[index] });
   });
@@ -126,8 +128,9 @@ app.route("/api/users/:id")
     // rewrite file
     fs.writeFileSync("./MOCK_DATA.json", JSON.stringify(users, null, 2));
 
-    return res.json({ status: "User deleted!" });
+    return res.json({ status : "User is deleted from the records!" });
   });
+
 
 /*
     Normal HTML page for users
