@@ -10,7 +10,7 @@ Setup & Run:
 Server runs on: `http://localhost:8000`
 
 API Endpoints:  
-- `GET /api/users` → Get all users  
+- `GET /api/users` → Get all users from the database 
 - `GET /api/users/:id` → Get a user by ID  
 - `POST /api/users` → Add a new user  
 - `PATCH /api/users/:id` → Update a user  
