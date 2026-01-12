@@ -6,6 +6,7 @@ GET /USERS/2 -> get user with id =2
 // yahan prr id likhkrr krna is not possible so 
 we instead do  GET/api/users/:id 
 : mean dynamic mtlb kuch bhiii hosktii hain value 
+// we are done with this 
 
 POST/ user - > create new user 
 PATCH  / user/1-> edit the user with ID 1 
