@@ -1,6 +1,6 @@
 # User CRUD API
 
-A simple CRUD API using **Node.js** and **Express** with a JSON file (`MOCK_DATA.json`) as storage.
+A simple CRUD API using **Node.js**  and **Express** with a JSON file (`MOCK_DATA.json`) as a storage.
 
 Setup & Run:  
 1. Clone the repo: `git clone https://github.com/garimapurohit/crud.git && cd crud`  
@@ -10,7 +10,7 @@ Setup & Run:
 Server runs on: `http://localhost:8000`
 
 API Endpoints:  
-- `GET /api/users` → Get all users  
+- `GET /api/users` → Get all users from the database 
 - `GET /api/users/:id` → Get a user by ID  
 - `POST /api/users` → Add a new user  
 - `PATCH /api/users/:id` → Update a user  
