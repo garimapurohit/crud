@@ -31,9 +31,16 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  gender: String,
-  jobTittle: String,
-});
+  gender: {
+  type: String,
+  },
+  jobTittle:{
+
+  type: String,
+  },
+},
+  {timestamps: true}
+);
 
 // schema bnngyaaa now we need to make a model :) 2
 const User = mongoose.model("user",userSchema); 
@@ -195,7 +202,6 @@ app.route("/api/users")
       return res.status(500).json({ error: error.message });
     }
   });
-
 // .patch((req, res) => {
 //     // Edit user -- abhi pending
 //      const id = Number(req.params.id);
