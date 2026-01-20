@@ -1,6 +1,6 @@
 const express = require("express"); // importing express framework 
 const mongoose = require("mongoose");
-const users = require("./MOCK_DATA.json");  // We store data in JSON files, but Express works with JavaScript objects/arrays,so we use require() to convert JSON data into JS arrays/objects.
+const users = require("./MOCK_DATA.json");// We store data in JSON files, but Express works with JavaScript objects/arrays,so we use require() to convert JSON data into JS arrays/objects.
 const fs =require("fs");
 
 const app = express();
@@ -18,7 +18,7 @@ mongoose
   });
 
 // first we are defining schema for the user 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({ 
   firstName: {
     type: String,
     required: true,
@@ -35,13 +35,12 @@ const userSchema = new mongoose.Schema({
   jobTittle: String,
 });
 
-// schema bnngyaaa now we need to make a model :) 
+// schema bnngyaaa now we need to make a model :) 2
 const User = mongoose.model("user",userSchema); 
 app.use(express.json());
 /*  
    /api/users ke liye GET + POST at one place 
 */
-
 // middleware 
 // Ye middleware HTML form se aane wale URL-encoded data ko parse karke req.body mein store karta hai.
 app.use(express.urlencoded({extended:false}));
@@ -57,14 +56,14 @@ fs.appendFile(
   );
 
 });
+// WE CAN MAKE MIDDLWARE USING APP.USE'
 
-// WE CAN MAKE MIDDLWARE USING APP.USE
 app.route("/api/users")
   .get((req, res) => {
     res.setHeader("x-myName","garima"); // here we make custom  header in the response :) 
     //while making custom header try to include x as prefix standard way of writing to denote to custom ones 
     // all users bhej deta hai
-const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
+// const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 
     return res.json(allusers); 
   })
@@ -121,8 +120,6 @@ const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 //  });
 // }
 
-
-
 // .post(async (req, res) => {
 //   try {
 //     const body = req.body;
@@ -137,7 +134,6 @@ const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 //   email: body.email,
 //   jobTittle: body.job_tittle,
 // });
-
 
 //     return res.status(201).json({
 //       message: "User created successfully",
@@ -161,32 +157,44 @@ const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 //     if (!user) {
 //         return res.status(404).json({ status: "User not found" });
 //     }
-
-
 //     return res.status(200).json(user);
 //   })
+// .post(async (req, res) => {
+//   try {
+//     const body = req.body;
 
+//     if (!body.firstName || !body.email || !body.jobTittle) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
 
+//     const user = await User.create(body);
 
+//     return res.status(201).json({
+//       message: "User created successfully",
+//       user,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// });
 .post(async (req, res) => {
-  try {
-    const body = req.body;
+    try {
+      const body = req.body;
 
-    if (!body.firstName || !body.email || !body.jobTittle) {
-      return res.status(400).json({ error: "All fields are required" });
+      if (!body.firstName || !body.email || !body.jobTittle) {
+        return res.status(400).json({ error: "All fields are required" });
+      }
+
+      const user = await User.create(body);
+
+      return res.status(201).json({
+        message: "User created successfully",
+        user,
+      });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
-
-    const user = await User.create(body);
-
-    return res.status(201).json({
-      message: "User created successfully",
-      user,
-    });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
+  });
 
 // .patch((req, res) => {
 //     // Edit user -- abhi pending
@@ -195,7 +203,7 @@ const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 
 //   // find user index
 //   const index = users.findIndex((u) => u.id === id);
-
+ 
 //   if (index === -1) {
 //     return res.status(404).json({ status: "User not found" });
 //   }
@@ -212,52 +220,92 @@ const allusers = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
 //   // send response only after file is written
 //   return res.status(200).json({ status: "User updated", user: users[index] });
 // })
-.patch((req, res) => {
-  const id = Number(req.params.id);
-  const body = req.body;
-  const index = users.findIndex((u) => u.id === id);
 
-  if (index === -1) {
-    return res.status(404).json({ status: "User not found" });
-  }
+// .patch((req, res) => {
+//   const id = Number(req.params.id);
+//   const body = req.body;
+//   const index = users.findIndex((u) => u.id === id);
 
-  users[index] = { ...users[index], ...body };
+//   if (index === -1) {
+//     return res.status(404).json({ status: "User not found" });
+//   }
 
-  fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
-    if (err) {
-      console.log(err);
-      // added the status code 
-      return res.status(500).json({ status: "error writing file" });
+//   users[index] = { ...users[index], ...body };
+
+//   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+//     if (err) {
+//       console.log(err);
+//       // added the status code 
+//       return res.status(500).json({ status: "error writing file" });
     
+//     }
+//     return res.status(200).json({ status: "User updated", user: users[index] });
+//   });
+// })
+// .delete((req, res) => {
+//     const id = Number(req.params.id);
+
+//     // read latest users from file
+//     const users = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
+
+//     // find index
+//     const userIndex = users.findIndex((u) => u.id === id);
+
+//     if (userIndex === -1) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     // remove user
+//     users.splice(userIndex, 1);
+
+//     // rewrite file
+//     fs.writeFileSync("./MOCK_DATA.json", JSON.stringify(users, null, 2));
+
+//     return res.json({ status : "User is deleted from the records!" });
+//   });
+app.route("/api/users/:id")
+  .patch((req, res) => {
+    const id = Number(req.params.id);
+    const body = req.body;
+
+    const index = users.findIndex((u) => u.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ status: "User not found" });
     }
-    return res.status(200).json({ status: "User updated", user: users[index] });
-  });
-})
-.delete((req, res) => {
+
+    users[index] = { ...users[index], ...body };
+
+    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ status: "error writing file" });
+      }
+      return res.status(200).json({
+        status: "User updated",
+        user: users[index],
+      });
+    });
+  })
+  .delete((req, res) => {
     const id = Number(req.params.id);
 
-    // read latest users from file
-    const users = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
-
-    // find index
-    const userIndex = users.findIndex((u) => u.id === id);
+    const data = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
+    const userIndex = data.findIndex((u) => u.id === id);
 
     if (userIndex === -1) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // remove user
-    users.splice(userIndex, 1);
+    data.splice(userIndex, 1);
 
-    // rewrite file
-    fs.writeFileSync("./MOCK_DATA.json", JSON.stringify(users, null, 2));
+    fs.writeFileSync("./MOCK_DATA.json", JSON.stringify(data, null, 2));
 
-    return res.json({ status : "User is deleted from the records!" });
+    return res.json({ status: "User is deleted from the records!" });
   });
 
-
 /*
-    Normal HTML page for users
+  Normal HTML page for users
 */
 app.get('/users', (req, res) => {
   const html = `
