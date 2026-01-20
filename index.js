@@ -1,6 +1,6 @@
 const express = require("express"); // importing express framework 
 const mongoose = require("mongoose");
-const users = require("./MOCK_DATA.json");// We store data in JSON files, but Express works with JavaScript objects/arrays,so we use require() to convert JSON data into JS arrays/objects.
+// const users = require("./MOCK_DATA.json");// We store data in JSON files, but Express works with JavaScript objects/arrays,so we use require() to convert JSON data into JS arrays/objects.
 const fs =require("fs");
 
 const app = express();
@@ -251,9 +251,6 @@ app.route("/api/users")
 // .delete((req, res) => {
 //     const id = Number(req.params.id);
 
-//     // read latest users from file
-//     const users = JSON.parse(fs.readFileSync("./MOCK_DATA.json"));
-
 //     // find index
 //     const userIndex = users.findIndex((u) => u.id === id);
 
@@ -270,28 +267,31 @@ app.route("/api/users")
 //     return res.json({ status : "User is deleted from the records!" });
 //   });
 app.route("/api/users/:id")
-  .patch((req, res) => {
-    const id = Number(req.params.id);
-    const body = req.body;
+  .patch(async(req, res) => {
+  await User.findByIdAndUpdate(req.params.id, {lastName:"changed"});
+  return res.json({status : "success"});
+    // const id = Number(req.params.id);
+    // const body = req.body;
 
-    const index = users.findIndex((u) => u.id === id);
+    // const index = users.findIndex((u) => u.id === id);
 
-    if (index === -1) {
-      return res.status(404).json({ status: "User not found" });
-    }
+    // if (index === -1) {
+    //   return res.status(404).json({ status: "User not found" });
+    // }
 
-    users[index] = { ...users[index], ...body };
+    // users[index] = { ...users[index], ...body };
 
-    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ status: "error writing file" });
-      }
-      return res.status(200).json({
-        status: "User updated",
-        user: users[index],
-      });
-    });
+    // fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //     return res.status(500).json({ status: "error writing file" });
+    //   }
+    //   return res.status(200).json({
+    //     status: "User updated",
+    //     user: users[index],
+    //   });
+    // });
+    
   })
   .delete((req, res) => {
     const id = Number(req.params.id);
@@ -313,10 +313,11 @@ app.route("/api/users/:id")
 /*
   Normal HTML page for users
 */
-app.get('/users', (req, res) => {
+app.get('/users', async(req, res) => {
+  const allDbUsers = await User.find({});
   const html = `
     <ul>
-      ${users.map(u => `<li>${u.first_name}</li>`).join("")}
+      ${allDbUsers.map(u => `<li>${u.firstName}-${u.email}</li>`).join("")}
     </ul>
   `;
   res.send(html);
