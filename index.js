@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
 
 // schema bnngyaaa now we need to make a model :) 2
 const User = mongoose.model("user",userSchema); 
-app.use(express.json());
+app.use(express.json()); 
 /*  
    /api/users ke liye GET + POST at one place 
 */
@@ -184,15 +184,21 @@ app.route("/api/users")
 //     return res.status(500).json({ error: error.message });
 //   }
 // });
-.post(async (req, res) => {
+.post("/api/users",async (req, res) => {
     try {
       const body = req.body;
 
-      if (!body.firstName || !body.email || !body.jobTittle) {
+      if (!body || !body.firstName ||!body.lastName|| !body.email || !body.jobTittle) {
         return res.status(400).json({ error: "All fields are required" });
       }
 
-      const user = await User.create(body);
+      const user = await User.create({
+        firstName: body.firstName,
+        lastName :body.lastName,
+        email : body.email,
+        jobTittle : body.jobTittle,
+        
+      }); 
 
       return res.status(201).json({
         message: "User created successfully",
@@ -307,7 +313,7 @@ app.route("/api/users/:id")
 
     fs.writeFileSync("./MOCK_DATA.json", JSON.stringify(data, null, 2));
 
-    return res.json({ status: "User is deleted from the records!" });
+    return res.json({ status: "User is deleted from the records!" });3
   });
 
 /*
@@ -317,7 +323,7 @@ app.get('/users', async(req, res) => {
   const allDbUsers = await User.find({});
   const html = `
     <ul>
-      ${allDbUsers.map(u => `<li>${u.firstName}-${u.email}</li>`).join("")}
+      ${allDbUsers.map(u => `<li>${User.firstName}-${User.email}</li>`).join("")}
     </ul>
   `;
   res.send(html);
