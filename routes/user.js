@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
       user,
     });
   } catch (err) {
+
     return res.status(500).json({ error: err.message });
   }
 });
@@ -54,9 +55,10 @@ router.delete("/:id", async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     return res.json({ status: "deleted" });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
   }
+  catch (err) {
+    return res.status(500).json({ error: err.message });
+  }  
 });
 
 module.exports = router;

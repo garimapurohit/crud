@@ -1,5 +1,7 @@
 const express = require("express"); // importing express framework 
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose"); // ISKIII ABH NEED NIII HAINN...BECOZ HMNE CONNECTION KO ALAGSE BNALIYAA NOW 
+// we will import the connection.js from the mongoDb
+const {connectMongoDB}= require("/connection")
 // const users = require("./MOCK_DATA.json");// We store data in JSON files, but Express works with JavaScript objects/arrays,so we use require() to convert JSON data into JS arrays/objects.
 const fs =require("fs");
 
@@ -7,9 +9,12 @@ const userRoutes = require("./routes/user");
 
 const app = express();
 // req.body ko read karne ke liye
+connectMongoDB();
 
 // mongodb ko connect krne ke liyee 
 const port = 8001;
+
+// we can take this mongodb connect too in a seperate file 
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/learning1")
@@ -59,6 +64,7 @@ app.use(express.json());
 // */
 // middleware 
 // Ye middleware HTML form se aane wale URL-encoded data ko parse karke req.body mein store karta hai.
+
 app.use(express.urlencoded({extended:false}));
  // koi bhii form data aaya usko body mein dalne mein help kregaa 
 app.use((req, res, next) => {
@@ -337,11 +343,9 @@ fs.appendFile(
 //   `;
 //   res.send(html);
 // });
-
-// const PORT = 8001;
-app.use("/api/users", userRoutes);
+app.use("/users", userRoutes); // /user prr koiii bhiii request aaye toh userRoutes ka use krengee 
 
 // start server
-app.listen(PORT, () => {
-  console.log(`Server started at port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server started at port ${port}`);
 });
